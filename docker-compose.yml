@@ -1,0 +1,11 @@
+services:
+  osm-mcp-puca:
+    image: redbranch/osm-mcp-puca:latest
+    container_name: osm-mcp-puca
+    hostname: osm-mcp-puca
+    restart: unless-stopped
+    ports:
+      - 3300:8000
+    logging:
+      options:
+        max-size: 10m
