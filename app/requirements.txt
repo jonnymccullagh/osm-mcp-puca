@@ -1,0 +1,6 @@
+requests
+mcp
+overpy
+geopy
+pydantic
+pydantic-ai
