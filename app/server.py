@@ -31,7 +31,7 @@ mcp = FastMCP("puca")
 
 
 @mcp.tool()
-async def get_address_coordinates(address: str) -> str:
+async def get_coordinates_for_address(address: str) -> str:
     """Get the coordinates of a given address
 
     Args:
@@ -44,17 +44,16 @@ async def get_address_coordinates(address: str) -> str:
 
 
 @mcp.tool()
-async def get_address_from_coordinates(lat: float, lon: float) -> str:
+async def get_address_by_coordinates(lat: float, lon: float) -> str:
     """Get the coordinates of a given address
 
     Args:
         address: A valid address
     """
-    address = get_address_from_coordinates(lat, lon)
-    coords = get_address_from_coordinates(address)
-    if not coords or not validate_coordinates(coords.lat, coords.lon):
+    address = await get_address_from_coordinates(lat, lon)
+    if not address:
         return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
-    return f"Latitude: {coords.lat}, Longitude: {coords.lon}"
+    return f"Address: {address}"
 
 
 @mcp.tool()
@@ -79,8 +78,8 @@ async def get_defibrillators(address: str, distance: int = config.DISTANCE) -> s
         distance_metres = int(
             get_distance_between_points(coords.lat, coords.lon, node.lat, node.lon)
         )
-        node_address = get_address_from_coordinates(node.lat, node.lon)
-        building_name = get_building_name(node.lat, node.lon)
+        node_address = await get_address_from_coordinates(node.lat, node.lon)
+        building_name = await get_building_name(node.lat, node.lon)
         return_text += (
             f"\n{distance_metres} metres away: {building_name} {node_address[:30]} "
             f"Latitude: {node.lat}, Longitude: {node.lon}, Access: {node.tags.get('access', 'Not known')}, "
@@ -188,7 +187,7 @@ async def get_toilets(address: str, distance: int = config.DISTANCE) -> str:
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
     return_text += f"\nThere are {len(results_list.nodes)} {type} within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = get_address_from_coordinates(node.lat, node.lon)
+        node_address = await get_address_from_coordinates(node.lat, node.lon)
         return_text += (
             f"\n{node_address} "
             f"Latitude: {node.lat}, Longitude: {node.lon}, "
@@ -214,7 +213,7 @@ async def get_post_offices(address: str, distance: int = config.DISTANCE) -> str
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
     return_text += f"\nThere are {len(results_list.nodes)} {type} within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = get_address_from_coordinates(node.lat, node.lon)
+        node_address = await get_address_from_coordinates(node.lat, node.lon)
         return_text += (
             f"\n{node_address} "
             f"Latitude: {node.lat}, Longitude: {node.lon}, "
