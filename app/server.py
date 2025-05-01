@@ -263,13 +263,10 @@ async def get_fast_food_places(address: str, distance: int = config.DISTANCE) ->
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
     return_text += f"\nThere are {len(results_list.nodes)} {type} places within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = get_address_from_coordinates(node.lat, node.lon)
-        return_text += (
-            f"\n{node_address} "
-            f"Latitude: {node.lat}, Longitude: {node.lon}, "
-            f"Access: {node.tags.get('access', 'Not known')}, "
-            f"URL: https://openstreetmap.org/node/{node.id}"
-        )
+        node_address = await get_address_from_coordinates(node.lat, node.lon)
+        for tag in node.tags:
+            return_text += f"{tag}: {node.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
     return return_text
 
 
