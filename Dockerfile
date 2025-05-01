@@ -15,4 +15,4 @@ RUN uv pip install --system fastmcp httpx requests mcp overpy geopy pydantic pyd
 EXPOSE 8000
 
 # Set the command to run the application
-CMD ["sh", "-c", "fastmcp run --transport sse --host 0.0.0.0 --port 8000 server.py"]
+CMD ["sh", "-c", "fastmcp run --transport sse server.py"]
