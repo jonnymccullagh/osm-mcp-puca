@@ -37,7 +37,7 @@ async def get_address_coordinates(address: str) -> str:
     Args:
         address: A valid address
     """
-    coords = get_address_coordinates(address)
+    coords = await get_address_coordinates(address)
     if not coords or not validate_coordinates(coords.lat, coords.lon):
         return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
     return f"Latitude: {coords.lat}, Longitude: {coords.lon}"
@@ -66,7 +66,7 @@ async def get_defibrillators(address: str, distance: int = config.DISTANCE) -> s
         distance: The number of metres radius around the address to check
     """
     return_text = ""
-    coords = get_address_coordinates(address)
+    coords = await get_address_coordinates(address)
     if not coords or not validate_coordinates(coords.lat, coords.lon):
         return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
     bounding_box = get_bounds_by_address(address=address, distance=distance)
@@ -100,8 +100,8 @@ async def get_distance_between_addresses(address1: str, address2: str) -> str:
         address1: A valid address
         address1: A valid address
     """
-    coords1 = get_address_coordinates(address1)
-    coords2 = get_address_coordinates(address2)
+    coords1 = await get_address_coordinates(address1)
+    coords2 = await get_address_coordinates(address2)
     if not coords1 or not validate_coordinates(coords1.lat, coords1.lon):
         return "Unable to get valid coordinates for address. Check the values of {coords2.lat},{coords2.lon}"
     if not coords2 or not validate_coordinates(coords2.lat, coords2.lon):
