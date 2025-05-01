@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="#f5f5f5" />
+  
+  <!-- Ghost body -->
+  <path d="M140,140 C140,120 160,100 200,100 C240,100 260,120 260,140 C260,160 260,230 260,260 C260,270 270,275 260,285 C250,295 240,285 240,275 C240,285 230,295 220,285 C210,275 220,270 220,260 C220,270 210,280 200,270 C190,260 200,255 200,245 C200,255 190,265 180,255 C170,245 180,240 180,230 C180,240 170,250 160,240 C150,230 160,225 160,215 C160,225 150,235 140,225 C130,215 140,175 140,140 Z" fill="#8A67AB" />
+  
+  <!-- Wavy bottom edge effect -->
+  <path d="M140,140 C140,120 160,100 200,100 C240,100 260,120 260,140 C260,160 260,230 260,260" stroke="#7858A6" stroke-width="5" fill="none" />
+  
+  <!-- Eyes -->
+  <ellipse cx="175" cy="170" rx="15" ry="20" fill="white" />
+  <ellipse cx="225" cy="170" rx="15" ry="20" fill="white" />
+  
+  <!-- Pupils (that can move for mischievous look) -->
+  <circle cx="180" cy="175" r="8" fill="#333" />
+  <circle cx="230" cy="175" r="8" fill="#333" />
+  
+  <!-- Eyebrow arches for mischievous look -->
+  <path d="M160,150 Q175,140 190,150" stroke="#333" stroke-width="4" fill="none" />
+  <path d="M210,150 Q225,140 240,150" stroke="#333" stroke-width="4" fill="none" />
+  
+  <!-- Smile -->
+  <path d="M170,210 Q200,240 230,210" stroke="#333" stroke-width="4" fill="none" />
+  
+  <!-- Blush spots for friendliness -->
+  <circle cx="160" cy="200" r="10" fill="#FF9999" opacity="0.5" />
+  <circle cx="240" cy="200" r="10" fill="#FF9999" opacity="0.5" />
+  
+  <!-- Small sparkles around ghost for magical/mischievous feel -->
+  <path d="M290,150 L300,150 M295,145 L295,155" stroke="#FFCC33" stroke-width="3" />
+  <path d="M120,180 L130,180 M125,175 L125,185" stroke="#FFCC33" stroke-width="3" />
+  <path d="M260,110 L270,110 M265,105 L265,115" stroke="#FFCC33" stroke-width="3" />
+  <path d="M150,90 L160,90 M155,85 L155,95" stroke="#FFCC33" stroke-width="3" />
+  
+  <!-- Text label for the ghost -->
+  <text x="200" y="320" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#8A67AB">PÚCA</text>
+</svg>

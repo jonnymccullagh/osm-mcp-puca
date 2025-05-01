@@ -1,3 +1,7 @@
+"""
+Define Pydantic Models
+"""
+
 from pydantic import BaseModel
 
 
@@ -11,6 +15,7 @@ class BoundingBox(BaseModel):
     top_left_lon: float
     bottom_right_lat: float
     bottom_right_lon: float
+
 
 # Create a logger configuration model
 class LoggerConfig(BaseModel):
