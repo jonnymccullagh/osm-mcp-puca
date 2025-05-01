@@ -16,6 +16,7 @@ from puca.utils import (
     get_building_name,
     get_distance_between_points,
     validate_coordinates,
+    query_overpass,
 )
 from puca.emergency import defibrillators
 from puca.building import school, kindergarten, retail, vacant
@@ -329,7 +330,7 @@ async def get_vacant_buildings(address: str, distance: int = config.DISTANCE) ->
 
 
 @mcp.tool()
-def query_overpass(query: str, lat: float, lon: float, distance: int = config.DISTANCE) -> str:
+def get_overpass_results(query: str, lat: float, lon: float, distance: int = config.DISTANCE) -> str:
     """
     Queries the Overpass API with a custom query and returns the results.
     Args:
