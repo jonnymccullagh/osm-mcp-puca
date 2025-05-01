@@ -37,7 +37,7 @@ async def get_coordinates_for_address(address: str) -> str:
     Args:
         address: A valid address
     """
-    coords = await get_address_coordinates(address)
+    coords = get_address_coordinates(address)
     if not coords or not validate_coordinates(coords.lat, coords.lon):
         return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
     return f"Latitude: {coords.lat}, Longitude: {coords.lon}"
@@ -185,16 +185,15 @@ async def get_toilets(address: str, distance: int = config.DISTANCE) -> str:
     return_text = ""
     bounding_box = get_bounds_by_address(address=address, distance=distance)
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
-    return_text += f"\nThere are {len(results_list.nodes)} {type} within {distance} metres of {address}."
+    return_text += f"\nThere are {len(results_list.nodes)} {amenity} within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = await get_address_from_coordinates(node.lat, node.lon)
-        return_text += (
-            f"\n{node_address} "
-            f"Latitude: {node.lat}, Longitude: {node.lon}, "
-            f"Access: {node.tags.get('access', 'Not known')}, "
-            f"Cost: {node.tags.get('fee', '')}"
-            f"URL: https://openstreetmap.org/node/{node.id}"
-        )
+        for tag in node.tags:
+            return_text += f"{tag}: {node.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
+    for way in results_list.ways:
+        for tag in way.tags:
+            return_text += f"{tag}: {way.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/way/{way.id}\n"
     return return_text
 
 
@@ -211,15 +210,16 @@ async def get_post_offices(address: str, distance: int = config.DISTANCE) -> str
     return_text = ""
     bounding_box = get_bounds_by_address(address=address, distance=distance)
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
-    return_text += f"\nThere are {len(results_list.nodes)} {type} within {distance} metres of {address}."
+    return_text += f"\nThere are {len(results_list.nodes)} {amenity} places within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = await get_address_from_coordinates(node.lat, node.lon)
-        return_text += (
-            f"\n{node_address} "
-            f"Latitude: {node.lat}, Longitude: {node.lon}, "
-            f"Access: {node.tags.get('access', 'Not known')}, "
-            f"URL: https://openstreetmap.org/node/{node.id}"
-        )
+        for tag in node.tags:
+            return_text += f"{tag}: {node.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
+    for way in results_list.ways:
+        for tag in way.tags:
+            return_text += f"{tag}: {way.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/way/{way.id}\n"
+    return return_text
     return return_text
 
 
@@ -235,16 +235,15 @@ async def get_cafes(address: str, distance: int = config.DISTANCE) -> str:
     return_text = ""
     bounding_box = get_bounds_by_address(address=address, distance=distance)
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
-    return_text += f"\nThere are {len(results_list.nodes)} {type} within {distance} metres of {address}."
+    return_text += f"\nThere are {len(results_list.nodes)} {amenity} places within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = get_address_from_coordinates(node.lat, node.lon)
-        name += f"Name: {node.tags.get("name")}, " if node.tags.get("name") else ""
-        return_text += (
-            f"\n{name} {node_address}"
-            f"Latitude: {node.lat}, Longitude: {node.lon}, "
-            f"Cuisine: {node.tags.get('cuisine', 'Not known')}, "
-            f"URL: https://openstreetmap.org/node/{node.id}"
-        )
+        for tag in node.tags:
+            return_text += f"{tag}: {node.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
+    for way in results_list.ways:
+        for tag in way.tags:
+            return_text += f"{tag}: {way.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/way/{way.id}\n"
     return return_text
 
 
@@ -260,11 +259,15 @@ async def get_fast_food_places(address: str, distance: int = config.DISTANCE) ->
     return_text = ""
     bounding_box = get_bounds_by_address(address=address, distance=distance)
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
-    return_text += f"\nThere are {len(results_list.nodes)} {type} places within {distance} metres of {address}."
+    return_text += f"\nThere are {len(results_list.nodes)} {amenity} places within {distance} metres of {address}."
     for node in results_list.nodes:
         for tag in node.tags:
             return_text += f"{tag}: {node.tags[tag]},"
         return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
+    for way in results_list.ways:
+        for tag in way.tags:
+            return_text += f"{tag}: {way.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/way/{way.id}\n"
     return return_text
 
 
@@ -324,6 +327,7 @@ async def get_vacant_buildings(address: str, distance: int = config.DISTANCE) ->
             return_text += f"{tag}: {node.tags[tag]},"
         return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
     return return_text
+
 
 @mcp.tool()
 def query_overpass(query: str, lat: float, lon: float, distance: int = config.DISTANCE) -> str:
