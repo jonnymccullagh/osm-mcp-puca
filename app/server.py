@@ -383,4 +383,4 @@ if __name__ == "__main__":
             # print(asyncio.run(get_post_offices(address = args.address, distance = args.distance)))
     else:
         # Default to running the server
-        asyncio.run(mcp.run(transport="stdio"))
+        mcp.run(transport="sse")
