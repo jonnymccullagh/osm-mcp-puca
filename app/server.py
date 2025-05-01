@@ -65,7 +65,7 @@ async def get_defibrillators(address: str, distance: int = config.DISTANCE) -> s
         distance: The number of metres radius around the address to check
     """
     return_text = ""
-    coords = await get_address_coordinates(address)
+    coords = get_address_coordinates(address)
     if not coords or not validate_coordinates(coords.lat, coords.lon):
         return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
     bounding_box = get_bounds_by_address(address=address, distance=distance)
@@ -78,8 +78,8 @@ async def get_defibrillators(address: str, distance: int = config.DISTANCE) -> s
         distance_metres = int(
             get_distance_between_points(coords.lat, coords.lon, node.lat, node.lon)
         )
-        node_address = await get_address_from_coordinates(node.lat, node.lon)
-        building_name = await get_building_name(node.lat, node.lon)
+        node_address = get_address_from_coordinates(node.lat, node.lon)
+        building_name = get_building_name(node.lat, node.lon)
         return_text += (
             f"\n{distance_metres} metres away: {building_name} {node_address[:30]} "
             f"Latitude: {node.lat}, Longitude: {node.lon}, Access: {node.tags.get('access', 'Not known')}, "
@@ -99,8 +99,8 @@ async def get_distance_between_addresses(address1: str, address2: str) -> str:
         address1: A valid address
         address1: A valid address
     """
-    coords1 = await get_address_coordinates(address1)
-    coords2 = await get_address_coordinates(address2)
+    coords1 = get_address_coordinates(address1)
+    coords2 = get_address_coordinates(address2)
     if not coords1 or not validate_coordinates(coords1.lat, coords1.lon):
         return "Unable to get valid coordinates for address. Check the values of {coords2.lat},{coords2.lon}"
     if not coords2 or not validate_coordinates(coords2.lat, coords2.lon):
@@ -219,7 +219,6 @@ async def get_post_offices(address: str, distance: int = config.DISTANCE) -> str
         for tag in way.tags:
             return_text += f"{tag}: {way.tags[tag]},"
         return_text += f" URL: https://openstreetmap.org/way/{way.id}\n"
-    return return_text
     return return_text
 
 
