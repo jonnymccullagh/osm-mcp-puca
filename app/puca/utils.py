@@ -124,6 +124,15 @@ def get_bounds_by_address(address: str, distance: int) -> Optional[BoundingBox]:
     return bounding_box
 
 
+def get_bounds_by_coords(lat: float, lon: float, distance: int) -> Optional[BoundingBox]:
+    """Use a latitiude and longitude to create a box for overpass queries"""
+    return_text = ""
+    if validate_coordinates(lat, lon):
+        bounding_box = get_bounding_box(lat, lon, distance)
+        return bounding_box
+    return None
+
+
 def get_address_coordinates(address: str) -> Optional[Coordinates]:
     """Geocode and address into a latitude and longitude"""
     params = {"q": address, "format": "json", "limit": 1}

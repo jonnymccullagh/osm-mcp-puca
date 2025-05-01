@@ -29,6 +29,5 @@ jobs:
     # Build and Push Docker Image
     - name: Build and Push Docker Image
       run: |
-        docker build -t redbranch/osm-mcp-puca:${{ env.VERSION }} .
-        docker push redbranch/osm-mcp-puca:${{ env.VERSION }}
-
+        docker build -t redbranch/osm-mcp-puca:${{ env.VERSION }} -t redbranch/osm-mcp-puca:latest .
+        docker push redbranch/osm-mcp-puca

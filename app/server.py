@@ -12,6 +12,7 @@ from puca.utils import (
     get_address_coordinates,
     get_address_from_coordinates,
     get_bounds_by_address,
+    get_bounds_by_coords,
     get_building_name,
     get_distance_between_points,
     validate_coordinates,
@@ -27,6 +28,33 @@ logger = setup_logger(config)
 # Load environment variables
 load_dotenv()
 mcp = FastMCP("puca")
+
+
+@mcp.tool()
+async def get_address_coordinates(address: str) -> str:
+    """Get the coordinates of a given address
+
+    Args:
+        address: A valid address
+    """
+    coords = get_address_coordinates(address)
+    if not coords or not validate_coordinates(coords.lat, coords.lon):
+        return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
+    return f"Latitude: {coords.lat}, Longitude: {coords.lon}"
+
+
+@mcp.tool()
+async def get_address_from_coordinates(lat: float, lon: float) -> str:
+    """Get the coordinates of a given address
+
+    Args:
+        address: A valid address
+    """
+    address = get_address_from_coordinates(lat, lon)
+    coords = get_address_from_coordinates(address)
+    if not coords or not validate_coordinates(coords.lat, coords.lon):
+        return "Unable to get valid coordinates for the address requested. Please check the spelling of the address."
+    return f"Latitude: {coords.lat}, Longitude: {coords.lon}"
 
 
 @mcp.tool()
@@ -299,6 +327,33 @@ async def get_vacant_buildings(address: str, distance: int = config.DISTANCE) ->
         for tag in node.tags:
             return_text += f"{tag}: {node.tags[tag]},"
         return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
+    return return_text
+
+@mcp.tool()
+def query_overpass(query: str, lat: float, lon: float, distance: int = config.DISTANCE) -> str:
+    """
+    Queries the Overpass API with a custom query and returns the results.
+    Args:
+        query: The Overpass API query to execute. A template is used to set the output and bounding search area so only the raw search terms are needed e.g. nwr["building"="school"]
+        lat: Latitude of the center point for the bounding box.
+        lon: Longitude of the center point for the bounding box.
+        distance: The radius in meters around the center point.
+    """
+    bounding_box = get_bounds_by_coords(lat, lon, distance)
+    result = query_overpass(query, bounding_box) 
+    return_text = ""
+    for way in result.ways:
+        for tag in way.tags:
+            return_text += f"{tag}: {way.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/way/{way.id}\n"
+    for node in result.nodes:
+        for tag in node.tags:
+            return_text += f"{tag}: {node.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/node/{node.id}\n"
+    for relation in result.relations:
+        for tag in relation.tags:
+            return_text += f"{tag}: {relation.tags[tag]},"
+        return_text += f" URL: https://openstreetmap.org/relation/{relation.id}\n"
     return return_text
 
 
