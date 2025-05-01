@@ -238,9 +238,10 @@ async def get_cafes(address: str, distance: int = config.DISTANCE) -> str:
     results_list = get_amenity(amenity=amenity, bounding_box=bounding_box)
     return_text += f"\nThere are {len(results_list.nodes)} {type} within {distance} metres of {address}."
     for node in results_list.nodes:
-        node_address = get_address_from_coordinates(node.lat, node.lon)
+        node_address = await get_address_from_coordinates(node.lat, node.lon)
+        name += f"Name: {node.tags.get("name")}, " if node.tags.get("name") else ""
         return_text += (
-            f"\n{node_address} "
+            f"\n{name} {node_address}"
             f"Latitude: {node.lat}, Longitude: {node.lon}, "
             f"Access: {node.tags.get('access', 'Not known')}, "
             f"URL: https://openstreetmap.org/node/{node.id}"
