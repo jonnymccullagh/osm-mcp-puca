@@ -14,8 +14,8 @@ async def main():
     """
     async with agent.run_mcp_servers():
         # Use the lines below if you want to see all the tools available from the MCP server
-        tools = await server.list_tools()
-        print(tools)
+        # tools = await server.list_tools()
+        # print(tools)
         result = await agent.run(
             "Are there any defibrillators within 300 metres of 9 Sugar Island, Newry"
         )
